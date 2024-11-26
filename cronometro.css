@@ -1,0 +1,325 @@
+:root[data-theme="light"] {
+    --bg-gradient-start: #1e3c72;
+    --bg-gradient-end: #2a5298;
+    --circle-bg: radial-gradient(circle, #ffffff 0%, #f0f0f0 80%);
+    --text-color: #2a5298;
+    --button-bg: rgba(255, 255, 255, 0.2);
+    --button-hover: rgba(255, 255, 255, 0.3);
+    --orbit-ball-color: #007aff;
+    --mark-color: rgba(42, 82, 152, 0.3);
+    --mark-color-main: rgba(42, 82, 152, 0.6);
+}
+
+:root[data-theme="dark"] {
+    --bg-gradient-start: #121212;
+    --bg-gradient-end: #1e1e1e;
+    --circle-bg: radial-gradient(circle, #2a2a2a 0%, #1a1a1a 80%);
+    --text-color: #ffffff;
+    --button-bg: rgba(255, 255, 255, 0.1);
+    --button-hover: rgba(255, 255, 255, 0.2);
+    --orbit-ball-color: #ff9500;
+    --mark-color: rgba(255, 255, 255, 0.3);
+    --mark-color-main: rgba(255, 255, 255, 0.6);
+}
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow: hidden;
+    transition: background 0.3s ease;
+}
+
+main {
+    position: relative;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.theme-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+}
+
+.theme-toggle button {
+    background: var(--button-bg);
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 12px;
+    border-radius: 50%;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-toggle button:hover {
+    background: var(--button-hover);
+    transform: translateY(-2px);
+}
+
+[data-theme="light"] .moon {
+    display: none;
+}
+
+[data-theme="dark"] .sun {
+    display: none;
+}
+
+.circle {
+    width: 250px;
+    height: 250px;
+    background: var(--circle-bg);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    position: relative;
+    margin: auto;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.orbit-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    transform: rotate(-90deg);
+}
+
+.time-marks {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.time-mark {
+    position: absolute;
+    width: 1px;
+    height: 6px;
+    background-color: var(--mark-color);
+    transform-origin: 50% 125px;
+    left: calc(50% - 0.5px);
+    top: 0;
+}
+
+.time-mark.main {
+    height: 10px;
+    width: 2px;
+    left: calc(50% - 1px);
+    background-color: var(--mark-color-main);
+}
+
+.orbit-ball {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: var(--orbit-ball-color);
+    border-radius: 50%;
+    transform-origin: center 125px;
+    left: calc(50% - 5px);
+    box-shadow: 0 0 10px var(--orbit-ball-color);
+    opacity: 0;
+    transform: rotate(0deg);
+    transition: opacity 0.3s ease;
+}
+
+.orbit-ball.running,
+.orbit-ball.paused {
+    opacity: 1;
+}
+
+.stopwatch {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+    z-index: 10;
+    transition: color 0.3s ease;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.buttons {
+    position: absolute;
+    bottom: -50px;
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    width: 100%;
+}
+
+.stop, .play-pause {
+    width: 50px;
+    height: 50px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 2px solid;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(5px);
+}
+
+.stop {
+    border-color: #ff3b30;
+}
+
+.stop::before {
+    content: "";
+    width: 20px;
+    height: 20px;
+    background-color: #ff3b30;
+    border-radius: 3px;
+}
+
+.play-pause {
+    border-color: #34c759;
+}
+
+.play-pause::before {
+    content: "";
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 10px 0 10px 20px;
+    border-color: transparent transparent transparent #34c759;
+    transition: all 0.3s ease;
+    left: 18px;
+}
+
+.play-pause.running::before,
+.play-pause.running::after {
+    content: "";
+    position: absolute;
+    width: 6px;
+    height: 20px;
+    background-color: #ff9500;
+    border-radius: 2px;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.play-pause.running::before {
+    left: 15px;
+}
+
+.play-pause.running::after {
+    right: 15px;
+}
+
+.stop:hover, .play-pause:hover {
+    transform: scale(1.1);
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.timer-options {
+    margin-top: 70px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.timer-options button {
+    padding: 8px 16px;
+    background-color: var(--button-bg);
+    border: none;
+    border-radius: 20px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    backdrop-filter: blur(5px);
+}
+
+.timer-options button:hover {
+    background-color: var(--button-hover);
+    transform: translateY(-2px);
+}
+
+.custom-timer {
+    display: flex;
+    gap: 8px;
+}
+
+.custom-timer input {
+    width: 80px;
+    padding: 8px;
+    border: none;
+    border-radius: 20px;
+    background-color: var(--button-bg);
+    color: white;
+    text-align: center;
+    font-size: 0.9rem;
+    backdrop-filter: blur(5px);
+}
+
+.custom-timer input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+@keyframes orbit {
+    from {
+        transform: rotate(90deg);
+    }
+    to {
+        transform: rotate(450deg);
+    }
+}
+
+.orbit-ball.running {
+    animation: orbit 60s linear infinite;
+    animation-play-state: running;
+}
+
+.orbit-ball.paused {
+    animation-play-state: paused;
+}
+
+@media (max-width: 768px) {
+    .circle {
+        width: 220px;
+        height: 220px;
+    }
+
+    .stopwatch {
+        font-size: 2rem;
+    }
+
+    .time-mark {
+        transform-origin: 50% 110px;
+    }
+
+    .orbit-ball {
+        transform-origin: center 110px;
+    }
+
+    .buttons .stop, 
+    .buttons .play-pause {
+        width: 45px;
+        height: 45px;
+    }
+
+    .theme-toggle button {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
+}

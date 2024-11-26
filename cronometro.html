@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronómetro</title>
+    <link href="./cronometro.css" rel="stylesheet">
+</head>
+<body>
+    <main>
+        <div class="theme-toggle">
+            <button onclick="toggleTheme()" id="theme-button">
+                <span class="sun">☀️</span>
+                <span class="moon">🌙</span>
+            </button>
+        </div>
+        <div class="circle">
+            <div class="orbit-container">
+                <div class="time-marks">
+                    <!-- Las marcas de tiempo se generarán con JavaScript -->
+                </div>
+                <div id="orbit-ball" class="orbit-ball"></div>
+            </div>
+            <div id="stopwatch" class="stopwatch">00:00:000</div>
+            <div class="buttons">
+                <div class="stop" onclick="stopTimer()"></div>
+                <div id="play-pause" class="play-pause" onclick="playPause()"></div>
+            </div>
+        </div>
+        <div class="timer-options">
+            <button onclick="setTimer(5)">5 min</button>
+            <button onclick="setTimer(10)">10 min</button>
+            <div class="custom-timer">
+                <input type="number" id="custom-minutes" placeholder="Minutos" min="1">
+                <button onclick="setCustomTimer()">Iniciar</button>
+            </div>
+        </div>
+    </main>
+    <script src="./dist/cronometro.js" defer></script>
+</body>
+</html>
